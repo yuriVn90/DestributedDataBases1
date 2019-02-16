@@ -6,19 +6,21 @@ public class JobHistorySqlTableDTO implements ISqlTableDTO {
 
 	private Long employee_id;
 	private Date start_date;
-	private int min_salary;
-	private int max_salary;
+	private Date  end_date ;
+	private int job_id;
+	private int department_id;
 	
 	
 	public JobHistorySqlTableDTO() {
 		
 	}
 
-	public JobHistorySqlTableDTO(Long employee_id, Date start_date, int min_salary, int max_salary) {
+	public JobHistorySqlTableDTO(Long employee_id, Date start_date,Date  end_date,int min_salary, int max_salary) {
 		this.employee_id = employee_id;
 		this.start_date = start_date;
-		this.min_salary = min_salary;
-		this.max_salary = max_salary;
+		this.end_date = end_date;
+		this.job_id = min_salary;
+		this.department_id = max_salary;
 	}
 
 	/** 
@@ -41,6 +43,22 @@ public class JobHistorySqlTableDTO implements ISqlTableDTO {
 	public Date getStart_date() {
 		return start_date;
 	}
+	
+	/**
+	 * @return end_date
+	 */
+	
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
+	
+	/**
+	 * @return end_date
+	 */
+	
+	public Date getEnd_date() {
+		return end_date;
+	}
 
 	/**
 	 * @param start_date
@@ -50,37 +68,37 @@ public class JobHistorySqlTableDTO implements ISqlTableDTO {
 	}
 
 	/**
-	 * @return min_salary
+	 * @return job_id
 	 */
-	public int getMin_salary() {
-		return min_salary;
+	public int getJob_id() {
+		return job_id;
 	}
 
 	/**
-	 * @param min_salary
+	 * @param job_id
 	 */
-	public void setMin_salary(int min_salary) {
-		this.min_salary = min_salary;
+	public void setJob_id(int job_id) {
+		this.job_id = job_id;
 	}
 
 	/**
-	 * @return max_salary
+	 * @return department_id
 	 */
-	public int getMax_salary() {
-		return max_salary;
+	public int getDepartment_id() {
+		return department_id;
 	}
 
 	/**
-	 * @param max_salary
+	 * @param department_id
 	 */
-	public void setMax_salary(int max_salary) {
-		this.max_salary = max_salary;
+	public void setDepartment_id(int department_id) {
+		this.department_id = department_id;
 	}
 
 	@Override
 	public String getStringToCSV() {
 		// TODO Auto-generated method stub
-		return null;
+		return employee_id +","+start_date +","+end_date +","+job_id +","+department_id;
 	}
 	
 	

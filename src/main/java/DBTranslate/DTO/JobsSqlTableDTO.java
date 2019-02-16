@@ -78,7 +78,7 @@ public class JobsSqlTableDTO implements ISqlTableDTO {
 	@Override
 	public String getStringToCSV() {
 		// TODO Auto-generated method stub
-		return null;
+		return job_id + ","+job_title + ","+min_salary + "," + max_salary;
 	}
 	
 	

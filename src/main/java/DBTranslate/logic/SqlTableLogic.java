@@ -135,10 +135,11 @@ public class SqlTableLogic {
 			while(resultSet.next()){
 				 long employee_id = resultSet.getLong(resultSet.getMetaData().getColumnName(1))  ;
 				 Date  start_date = resultSet.getDate(resultSet.getMetaData().getColumnName(2));
+				 Date  end_date = resultSet.getDate(resultSet.getMetaData().getColumnName(3));
 				 int  job_id = resultSet.getInt(resultSet.getMetaData().getColumnName(4)) ;
 				 int  department_id = resultSet.getInt(resultSet.getMetaData().getColumnName(5))  ;
 				
-				 listOfISqlTableDTO.add(new JobHistorySqlTableDTO(employee_id, start_date, job_id, department_id));
+				 listOfISqlTableDTO.add(new JobHistorySqlTableDTO(employee_id, start_date,end_date, job_id, department_id));
 			}
 			
 			ISqlTableDTO[] allData = new ISqlTableDTO[listOfISqlTableDTO.size()];

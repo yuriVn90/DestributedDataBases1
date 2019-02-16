@@ -126,7 +126,11 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 	@Override
 	public String getStringToCSV() {
 		// TODO Auto-generated method stub
-		return null;
+		return location_id+","+street_address
+				+","+postal_code
+				+","+city
+				+","+state_province
+				+","+country_id;
 	}
 	
 	
