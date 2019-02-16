@@ -212,6 +212,12 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	public void setDepartment_id(Long department_id) {
 		this.department_id = department_id;
 	}
+
+	@Override
+	public String getStringToCSV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	
