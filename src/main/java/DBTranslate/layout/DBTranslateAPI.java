@@ -25,7 +25,7 @@ public class DBTranslateAPI {
 			method=RequestMethod.GET,
 			path="/getSQLTable/{tableName}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:61477")
+	@CrossOrigin(origins = "http://127.0.0.1:64756")
 	public ISqlTableDTO[] getMySqlTable (@PathVariable("tableName") String tableName) {
 		return this.tables.getMySqlTable(tableName);
 	}

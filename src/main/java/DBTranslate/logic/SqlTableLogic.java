@@ -20,9 +20,9 @@ import DBTranslate.DTO.RegionsSqlTableDTO;
 
 public class SqlTableLogic {
 	
-	public static final String URL= "jdbc:sqlserver://localhost:1433;";
-	public static final String DB = "databaseName=dataBaseExample";
-	public static final String URLCon = "jdbc:sqlserver://localhost:1433;databaseName=dataBaseExample";
+	public static final String URL= "jdbc:sqlserver://localhost:3306;";
+	public static final String DB = "databaseName=hr";
+	public static final String URLCon = "jdbc:sqlserver://localhost:3306;databaseName=hr";
 
     private String user;
     private String password;
@@ -31,9 +31,10 @@ public class SqlTableLogic {
 	public SqlTableLogic() throws SQLException {
 		
 	     
-	     this.user = "user";
-	     this.password = "123";
+	     this.user = "root";
+	     this.password = "root";
 	     this.connection = DriverManager.getConnection(URLCon, user, password);
+	     
 	}
 	
 	public ISqlTableDTO[] readLocationsTable(){

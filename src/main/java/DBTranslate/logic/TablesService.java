@@ -1,40 +1,60 @@
 package DBTranslate.logic;
 
+import java.sql.SQLException;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Service;
 
 import DBTranslate.DTO.ISqlTableDTO;
 
-public interface TablesService {
+@Service
+public class TablesService implements ITablesService {
 	
-	/**
-	 * @param tableName
-	 * @return array of Tables' data
-	 */
-	public ISqlTableDTO[] getMySqlTable(String tableName);
+//	private PutOnCSV export;
+	private SqlTableLogic mySql;
 	
-	/**
-	 * @param collectionName
-	 * @return array of collections' documents
-	 */
-	public ISqlTableDTO[] getMongoDbCollection(String collectionName);
+	public TablesService() {
+		
+	}
 	
-	/**
-	 * 
-	 * @return sum of all employees' salaries
-	 */
-	public int getSumOfSalaries();
-	
-	/**
-	 * 
-	 * @param countryName
-	 * @return number of employees from country
-	 */
-	public int getNumbersOfEmployeesFromCountry (String countryName);
-	
-	/**
-	 * 
-	 * @param jobTitle
-	 * @return emails of employees with same job title
-	 */
-	public String[] getEmailsOfJobTitle(String jobTitle);
+	@PostConstruct
+	public void init() {
+		try {
+//			this.export = new PutOnCSV();
+			this.mySql = new SqlTableLogic();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ISqlTableDTO[] getMySqlTable(String tableName) {
+		return mySql.readCountriesTable();
+	}
+
+	@Override
+	public ISqlTableDTO[] getMongoDbCollection(String collectionName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getSumOfSalaries() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getNumbersOfEmployeesFromCountry(String countryName) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String[] getEmailsOfJobTitle(String jobTitle) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
