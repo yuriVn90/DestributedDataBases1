@@ -121,6 +121,13 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 	public void setCountry_id(Long country_id) {
 		this.country_id = country_id;
 	}
+
+
+	@Override
+	public String getStringToCSV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

@@ -76,6 +76,12 @@ public class JobHistorySqlTableDTO implements ISqlTableDTO {
 	public void setMax_salary(int max_salary) {
 		this.max_salary = max_salary;
 	}
+
+	@Override
+	public String getStringToCSV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

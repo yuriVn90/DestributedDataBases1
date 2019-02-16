@@ -65,6 +65,12 @@ public class CountriesSqlTableDTO implements ISqlTableDTO {
 	public void setRegion_id(int region_id) {
 		this.region_id = region_id;
 	}
+
+	@Override
+	public String getStringToCSV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

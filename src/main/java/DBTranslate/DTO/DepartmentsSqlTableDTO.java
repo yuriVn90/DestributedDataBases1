@@ -81,6 +81,12 @@ public class DepartmentsSqlTableDTO implements ISqlTableDTO {
 	public void setLocation_id(Long location_id) {
 		this.location_id = location_id;
 	}
+
+	@Override
+	public String getStringToCSV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	
