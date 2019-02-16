@@ -1,36 +1,40 @@
 package DBTranslate.logic;
 
+
 import DBTranslate.DTO.ISqlTableDTO;
 
 public interface TablesService {
 	
 	/**
-	 * @param collectionName
-	 * @return array of collections' records
+	 * @param tableName
+	 * @return array of Tables' data
 	 */
-	public ISqlTableDTO[] getMongoCollection(String collectionName);
+	public ISqlTableDTO[] getMySqlTable(String tableName);
+	
+	/**
+	 * @param collectionName
+	 * @return array of collections' documents
+	 */
+	public ISqlTableDTO[] getMongoDbCollection(String collectionName);
 	
 	/**
 	 * 
-	 * @param collectionName
-	 * @param id
-	 * @return the deleted record
+	 * @return sum of all employees' salaries
 	 */
-	public ISqlTableDTO deleteRecord(String collectionName, int id);
+	public int getSumOfSalaries();
 	
 	/**
 	 * 
-	 * @param collectionName
-	 * @param record
-	 * @return the added record
+	 * @param countryName
+	 * @return number of employees from country
 	 */
-	public ISqlTableDTO addRecord(String collectionName, ISqlTableDTO record);
+	public int getNumbersOfEmployeesFromCountry (String countryName);
 	
 	/**
 	 * 
-	 * @return employees collection sorted by name
+	 * @param jobTitle
+	 * @return emails of employees with same job title
 	 */
-	public ISqlTableDTO[] sortEmployeesCollectionByName();
-	
+	public String[] getEmailsOfJobTitle(String jobTitle);
 
 }
