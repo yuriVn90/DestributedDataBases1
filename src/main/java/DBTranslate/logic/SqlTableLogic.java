@@ -20,9 +20,9 @@ import DBTranslate.DTO.RegionsSqlTableDTO;
 
 public class SqlTableLogic {
 	
-	public static final String URL= "jdbc:sqlserver://localhost:3306;";
+	public static final String URL= "jdbc:mysql://localhost:3306;";
 	public static final String DB = "databaseName=hr";
-	public static final String URLCon = "jdbc:sqlserver://localhost:3306;databaseName=hr";
+	public static final String URLCon = "jdbc:mysql://localhost:3306/hr?useSSL=true";
 
     private String user;
     private String password;
