@@ -103,5 +103,6 @@
 	<classpathentry kind="lib" path="C:/Users/Finz/Desktop/web.db.lib/web.db.lib/validation-api-2.0.1.Final.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Finz/Desktop/web.db.lib/web.db.lib/xmlunit-core-2.5.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Finz/Downloads/jar_files/mongo-java-driver-3.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Finz/Desktop/mysql-connector-java-5.1.47.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
