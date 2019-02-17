@@ -11,7 +11,7 @@ public interface ICsvService {
 	 * @param tableData
 	 * @throws Exception
 	 */
-	public void exportToCsv(String tableName, String fileName, ISqlTableDTO[] tableData) throws Exception;
+	public void export(String tableName, String fileName, ISqlTableDTO[] tableData) throws Exception;
 	
 	/**
 	 * import data from CSV file to mongoDB collection
@@ -19,7 +19,7 @@ public interface ICsvService {
 	 * @param fileName
 	 * @return
 	 */
-	public ISqlTableDTO[] importFromCsv(String tableName, String fileName);
+	public void importFromCsv(String tableName, String fileName);
 	
 	
 
