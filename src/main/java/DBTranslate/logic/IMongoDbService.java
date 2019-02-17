@@ -1,15 +1,16 @@
 package DBTranslate.logic;
 
-
 import DBTranslate.DTO.ISqlTableDTO;
 
-public interface ITablesService {
+public interface IMongoDbService {
 	
 	/**
+	 * mongoImport table from CSV into mongo collection
 	 * @param tableName
-	 * @return array of Tables' data
+	 * @param fileName
+	 * @throws Exception
 	 */
-	public ISqlTableDTO[] getMySqlTable(String tableName);
+	public void mongoImportFromCsv(String tableName, String fileName) throws Exception;
 	
 	/**
 	 * @param collectionName
@@ -36,5 +37,7 @@ public interface ITablesService {
 	 * @return emails of employees with same job title
 	 */
 	public String[] getEmailsOfJobTitle(String jobTitle);
+	
+	
 
 }

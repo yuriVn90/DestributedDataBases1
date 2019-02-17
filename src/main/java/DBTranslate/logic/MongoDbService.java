@@ -1,36 +1,20 @@
 package DBTranslate.logic;
 
-import java.sql.SQLException;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.stereotype.Service;
 
 import DBTranslate.DTO.ISqlTableDTO;
 
 @Service
-public class TablesService implements ITablesService {
+public class MongoDbService implements IMongoDbService {
 	
-//	private PutOnCSV export;
-	private SqlTableLogic mySql;
-	
-	public TablesService() {
+	public MongoDbService() {
 		
 	}
 	
-	@PostConstruct
-	public void init() {
-		try {
-//			this.export = new PutOnCSV();
-			this.mySql = new SqlTableLogic();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Override
-	public ISqlTableDTO[] getMySqlTable(String tableName) {
-		return mySql.readCountriesTable();
+	public void mongoImportFromCsv(String tableName, String fileName) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
