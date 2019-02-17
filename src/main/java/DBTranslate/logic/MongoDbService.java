@@ -2,19 +2,30 @@ package DBTranslate.logic;
 
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 import DBTranslate.DTO.ISqlTableDTO;
 
 @Service
 public class MongoDbService implements IMongoDbService {
 	
+	private ICsvService csv;
+	private IMySqlService mySql;
+	
 	public MongoDbService() {
 		
 	}
 	
+	@PostConstruct
+	public void init(ICsvService csv, IMySqlService mySql) {
+		this.csv = csv;
+		this.mySql = mySql;
+	}
+	
 	@Override
 	public void mongoImportFromCsv(String tableName, String fileName) throws Exception {
-		// TODO Auto-generated method stub
-		
+		mySql.exportTableToCSV(tableName, fileName);
+		this.csv.importFromCsv(tableName, fileName);
 	}
 
 	@Override

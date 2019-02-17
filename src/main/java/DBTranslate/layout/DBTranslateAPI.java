@@ -69,8 +69,4 @@ public class DBTranslateAPI {
 		return this.mongo.getEmailsOfJobTitle(jobTitle);
 	}
 	
-	
-	
-	
-	
 }

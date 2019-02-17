@@ -18,5 +18,7 @@ public interface IMySqlService {
 	 * @param tableData
 	 */
 	public void exportTableToCSV(String tableName, String fileName, ISqlTableDTO[] tableData);
+	
+	public void exportTableToCSV(String tableName, String fileName);
 
 }

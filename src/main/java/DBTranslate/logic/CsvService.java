@@ -43,7 +43,7 @@ public class CsvService implements ICsvService {
     }
     
 	@Override
-	public void export(String tableName, String fileName, ISqlTableDTO[] tableData) throws Exception {
+	public void export(String tableName, String fileName) throws Exception {
 		try {
 	        Statement stmt = connection.createStatement();
 	        String sql = "Select * from "+tableName;
@@ -106,8 +106,8 @@ public class CsvService implements ICsvService {
 	public void importFromCsv(String tableName, String fileName) {
 		try {
 			//TODO install mongoDB and change the path
-			ProcessBuilder processBuilder = new ProcessBuilder("D:\\Databases\\mongodb-win32-x86_64-2008plus-ssl-4.0.4\\bin\\mongoimport.exe","-d",this.mongoName
-					,"-c",tableName,"--type","csv","--file","D:\\integrationcourseenv\\workspace\\distributedDatabasesFinalSeverSide\\"+fileName, "--headerline");
+			ProcessBuilder processBuilder = new ProcessBuilder("/Users/data/db/","-d",this.mongoName
+					,"-c",tableName,"--type","csv","--file","/Users/yuriv/Developer/Yuri/dataBase/DistrebutedDataBases1/"+fileName, "--headerline");
 			Process process = processBuilder.start();
 			System.out.println("Reading the csv to  mongoDB");
 			process.waitFor();
@@ -115,6 +115,11 @@ public class CsvService implements ICsvService {
 		} catch (Exception e) {
 			System.out.println("Error executing " + e.toString());
 		}
+	}
+
+	@Override
+	public void export(String tableName, String fileName, ISqlTableDTO[] tableData) throws Exception {
+		this.export(tableName, fileName);
 	}
 
 }

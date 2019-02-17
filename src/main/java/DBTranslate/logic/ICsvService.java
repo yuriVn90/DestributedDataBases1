@@ -13,6 +13,8 @@ public interface ICsvService {
 	 */
 	public void export(String tableName, String fileName, ISqlTableDTO[] tableData) throws Exception;
 	
+	public void export(String tableName, String fileName) throws Exception;
+	
 	/**
 	 * import data from CSV file to mongoDB collection
 	 * @param tableName

@@ -274,4 +274,14 @@ public class MySqlService implements IMySqlService {
 		
 	}
 
+	@Override
+	public void exportTableToCSV(String tableName, String fileName) {
+		try {
+			this.csv.export(tableName, fileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }
