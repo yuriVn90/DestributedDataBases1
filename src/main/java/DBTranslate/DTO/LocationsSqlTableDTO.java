@@ -132,6 +132,54 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 				+","+state_province
 				+","+country_id;
 	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + country_id;
+		result = prime * result + location_id;
+		result = prime * result + postal_code;
+		result = prime * result + ((state_province == null) ? 0 : state_province.hashCode());
+		result = prime * result + ((street_address == null) ? 0 : street_address.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LocationsSqlTableDTO other = (LocationsSqlTableDTO) obj;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (country_id != other.country_id)
+			return false;
+		if (location_id != other.location_id)
+			return false;
+		if (postal_code != other.postal_code)
+			return false;
+		if (state_province == null) {
+			if (other.state_province != null)
+				return false;
+		} else if (!state_province.equals(other.state_province))
+			return false;
+		if (street_address == null) {
+			if (other.street_address != null)
+				return false;
+		} else if (!street_address.equals(other.street_address))
+			return false;
+		return true;
+	}
 	
 	
 	

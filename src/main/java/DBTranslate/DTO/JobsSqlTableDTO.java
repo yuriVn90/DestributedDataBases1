@@ -80,6 +80,44 @@ public class JobsSqlTableDTO implements ISqlTableDTO {
 		// TODO Auto-generated method stub
 		return job_id + ","+job_title + ","+min_salary + "," + max_salary;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((job_id == null) ? 0 : job_id.hashCode());
+		result = prime * result + ((job_title == null) ? 0 : job_title.hashCode());
+		result = prime * result + max_salary;
+		result = prime * result + min_salary;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JobsSqlTableDTO other = (JobsSqlTableDTO) obj;
+		if (job_id == null) {
+			if (other.job_id != null)
+				return false;
+		} else if (!job_id.equals(other.job_id))
+			return false;
+		if (job_title == null) {
+			if (other.job_title != null)
+				return false;
+		} else if (!job_title.equals(other.job_title))
+			return false;
+		if (max_salary != other.max_salary)
+			return false;
+		if (min_salary != other.min_salary)
+			return false;
+		return true;
+	}
+	
 	
 	
 }

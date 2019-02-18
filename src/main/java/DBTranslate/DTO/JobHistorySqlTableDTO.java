@@ -100,6 +100,49 @@ public class JobHistorySqlTableDTO implements ISqlTableDTO {
 		// TODO Auto-generated method stub
 		return employee_id +","+start_date +","+end_date +","+job_id +","+department_id;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + department_id;
+		result = prime * result + ((employee_id == null) ? 0 : employee_id.hashCode());
+		result = prime * result + ((end_date == null) ? 0 : end_date.hashCode());
+		result = prime * result + job_id;
+		result = prime * result + ((start_date == null) ? 0 : start_date.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JobHistorySqlTableDTO other = (JobHistorySqlTableDTO) obj;
+		if (department_id != other.department_id)
+			return false;
+		if (employee_id == null) {
+			if (other.employee_id != null)
+				return false;
+		} else if (!employee_id.equals(other.employee_id))
+			return false;
+		if (end_date == null) {
+			if (other.end_date != null)
+				return false;
+		} else if (!end_date.equals(other.end_date))
+			return false;
+		if (job_id != other.job_id)
+			return false;
+		if (start_date == null) {
+			if (other.start_date != null)
+				return false;
+		} else if (!start_date.equals(other.start_date))
+			return false;
+		return true;
+	}
 	
 	
 	

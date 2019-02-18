@@ -4,13 +4,17 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
@@ -66,61 +70,33 @@ public class MongoDbService implements IMongoDbService {
 
 	@Override
 	public ISqlTableDTO[] getMongoDbCollection(String collectionName) {
-		if(TABLE_EMPLOYEES.equalsIgnoreCase(collectionName))
-		{
-			return readEmployeesCollection();
+		switch (collectionName.toUpperCase()) {
+			case TABLE_COUNTRIES: 	return this.readCountriesCollection();
+			case TABLE_DEPARTMENTS: return this.readDepartmentsCollection();
+			case TABLE_EMPLOYEES:	return this.readEmployeesCollection();
+			case TABLE_JOB_HISTORY:	return this.readJobHistoryCollection();
+			case TABLE_JOBS:		return this.readJobsCollection();
+			case TABLE_LOCATIONS:	return this.readLocationsCollection();
+			case TABLE_REGIONS:		return this.readRegionsCollection();
+			default:
 		}
-		else if(TABLE_DEPARTMENTS.equalsIgnoreCase(collectionName))
-		{
-			return readDepartmentsCollection();
-		}
-		else if(TABLE_LOCATIONS.equalsIgnoreCase(collectionName))
-		{
-			return readLocationsCollection();
-		}
-		else if(TABLE_COUNTRIES.equalsIgnoreCase(collectionName))
-		{
-			return readCountriesCollection();
-		}
-		else if(TABLE_REGIONS.equalsIgnoreCase(collectionName))
-		{
-			return readRegionsCollection();
-		}
-		else if(TABLE_JOB_HISTORY.equalsIgnoreCase(collectionName))
-		{
-			return readJobHistoryCollection();
-		}
-		else if(TABLE_JOBS.equalsIgnoreCase(collectionName))
-		{
-			return readJobsCollection();
-		}
-		
 		return null;
 	}
 
 	@Override
-	public int getSumOfSalaries() {
+	public int getMaxSalary() {
 		try {
 			this.mongoImportFromCsv(TABLE_EMPLOYEES, TABLE_EMPLOYEES);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-			MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_EMPLOYEES);
-			AggregateIterable<Document> ag = mongoCollection.aggregate(
-				      Arrays.asList(Aggregates.group("", Accumulators.sum("totalSum", "$salary"))
-				      )
-				);
-			
-			Document first = ag.first();
-			int sum = first.getInteger("totalSum");
-//			int sum = 0;
-//			 for (Document doc : ag) {
-//			        int value = doc.getInteger("totalSum");
-//			        sum = sum + value;
-//			    }
-			 System.out.println(sum);
-			 return sum;
+		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_EMPLOYEES);
+		AggregateIterable<Document> ag = mongoCollection.aggregate(Arrays.asList(Aggregates.group(null, Accumulators.max("totalSum", "$salary"))));	
+		Document first = ag.first();
+		if (first != null) {
+			return (int)first.get("totalSum");
+		} 
+		return -1;
 	}
 
 	@Override
@@ -131,70 +107,30 @@ public class MongoDbService implements IMongoDbService {
 			this.mongoImportFromCsv(TABLE_DEPARTMENTS, TABLE_DEPARTMENTS);
 			this.mongoImportFromCsv(TABLE_EMPLOYEES, TABLE_EMPLOYEES);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollectionFirst = mongoDatabase.getCollection(TABLE_COUNTRIES);
 		MongoCollection<Document> mongoCollectionSecond = mongoDatabase.getCollection(TABLE_LOCATIONS);
 		MongoCollection<Document> mongoCollectionThird = mongoDatabase.getCollection(TABLE_DEPARTMENTS);
 		MongoCollection<Document> mongoCollectionFourth = mongoDatabase.getCollection(TABLE_EMPLOYEES);
+		FindIterable<Document> doc = mongoCollectionFirst.find(new BasicDBObject("country_name", "israel"));
+		int countryId = doc.first().getInteger("country_id");
+		AggregateIterable<Document> locations = mongoCollectionSecond.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("country_id", countryId)), Aggregates.group("$location_id")));
 		
-		AggregateIterable<Document> ag = mongoCollectionFirst.aggregate(Arrays.asList(
-                Aggregates.match(eq("country_name", countryName)),
-                Aggregates.group("$country_id")));
+		AggregateIterable<Document> departments = null;
+		AggregateIterable<Document> employees = null;
+		List<Document> employeesIds = new ArrayList<>();
 		
-		ArrayList<String> listString = new ArrayList<String>();
-	    for (Document doc : ag) {
-	        String id = doc.toString();
-	        listString.add(id);
-	    }
-	    
-	    AggregateIterable<Document> ag1 = null;
-	    ag1 = doAggregatDocForMatch(ag1, listString, mongoCollectionSecond, "country_id", "$Location_id");
-	    listString.clear();
-	    
-	    for (Document doc : ag1) {
-	        String id = doc.toString();
-	        listString.add(id);
-	    }
-	    
-	    
-	    AggregateIterable<Document> ag2 = null;
-	    ag2 = doAggregatDocForMatch(ag2,listString,mongoCollectionThird,"location_id","$department_id");
-	    listString.clear();
-	    for (Document doc : ag1) {
-	        String id = doc.toString();
-	        listString.add(id);
-	    }
-	    
-	    AggregateIterable<Document> ag3 = null;
-	    for (int i = 0 ;i<listString.size();i++) {
-	    	 ag1 = mongoCollectionFourth.aggregate(Arrays.asList(
-	                 Aggregates.match(eq("department_id", listString.get(i))),
-	                 Aggregates.group(Accumulators.sum("count", 1))));
-	    }
-	    
-	    int numOfEmployess = 0;
-		 for (Document doc : ag3) {
-		        int value = doc.getInteger("count", 0);
-		        numOfEmployess = numOfEmployess +value;
-		    }
-	    
-	    
-	    
-		return numOfEmployess;
-	}
-
-	
-
-	private AggregateIterable<Document> doAggregatDocForMatch(AggregateIterable<Document> ag, ArrayList<String> listString,
-			MongoCollection<Document> mongoCollection,String nameMatch, String nameGroup) {
-		  for (int i = 0 ;i<listString.size();i++) {
-		    	 ag = mongoCollection.aggregate(Arrays.asList(
-		                 Aggregates.match(eq(nameMatch, listString.get(i))),
-		                 Aggregates.group(nameGroup)));
-		    }
-		return ag;
+		for (Document d : locations) {
+			departments = mongoCollectionThird.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("location_id", d.getInteger("_id"))), Aggregates.group("$department_id")));
+			for(Document l : departments) {
+				employees = mongoCollectionFourth.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("department_id", l.getInteger("_id"))), Aggregates.group("$employee_id")));
+				for(Document e : employees) {
+					employeesIds.add(e);
+				}
+			}
+		}
+	    return employeesIds.size();
 	}
 
 	@Override
@@ -203,52 +139,35 @@ public class MongoDbService implements IMongoDbService {
 			this.mongoImportFromCsv(TABLE_JOBS, TABLE_JOBS);
 			this.mongoImportFromCsv(TABLE_EMPLOYEES, TABLE_EMPLOYEES);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollectionFirst = mongoDatabase.getCollection(TABLE_JOBS);
 		MongoCollection<Document> mongoCollectionSecond = mongoDatabase.getCollection(TABLE_EMPLOYEES);
-		AggregateIterable<Document> ag = mongoCollectionFirst.aggregate(Arrays.asList(
-                Aggregates.match(eq("jobTitle", jobTitle)),
-                Aggregates.group("$employee_id")));
 		
-		
-	    ArrayList<String> listString = new ArrayList<String>();
-	    for (Document doc : ag) {
-	        String id = doc.toString();
-	        listString.add(id);
-	    }
-	    AggregateIterable<Document> ag1 = null;
-	    for (int i = 0 ;i<listString.size();i++) {
-	    	 ag1 = mongoCollectionSecond.aggregate(Arrays.asList(
-	                 Aggregates.match(eq("job_id", listString.get(i))),
-	                 Aggregates.group("$email")));
-	    }
+		AggregateIterable<Document> jobs = mongoCollectionFirst.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("job_title", jobTitle)), Aggregates.group("$job_id")));
+		List<String> employeeEmails = new ArrayList<>();
+		for (Document j : jobs) {
+			AggregateIterable<Document> employees = mongoCollectionSecond.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("job_id", j.getInteger("_id"))), Aggregates.group("$email")));
+			for (Document e : employees) {
+				employeeEmails.add(e.getString("_id"));
+			}
+		}
 	    
-	    String [] allEmails = new String [listString.size()];
-	    int index = 0;
-	    for (Document doc : ag1) {
-	        String email = doc.toString();
-	        allEmails[index]= email;
-	        index++;
-	    }
-	    
-		return allEmails;
+		String[] allEmails = new String[employeeEmails.size()];
+		return employeeEmails.toArray(allEmails);
 	}
 	
 	private ISqlTableDTO[] readEmployeesCollection(){
-		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
+		Set<ISqlTableDTO> listOfISqlTableDTO = new HashSet<>();
 		try {
 			this.mongoImportFromCsv(TABLE_EMPLOYEES, TABLE_EMPLOYEES);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_EMPLOYEES);
 		
 		FindIterable<Document> cursor = mongoCollection.find();
 		Iterator<Document> iterator = cursor.iterator();
-		
 		
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next();
@@ -268,27 +187,21 @@ public class MongoDbService implements IMongoDbService {
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
-		data = listOfISqlTableDTO.toArray(data);
-		
-	
-		
-		return data;
+		return listOfISqlTableDTO.toArray(data);
 	}
     
     
     private ISqlTableDTO[] readLocationsCollection(){
-		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
+    	Set<ISqlTableDTO> listOfISqlTableDTO = new HashSet<>();
 		try {
 			this.mongoImportFromCsv(TABLE_LOCATIONS, TABLE_LOCATIONS);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_LOCATIONS);
 		
 		FindIterable<Document> cursor = mongoCollection.find();
 		Iterator<Document> iterator = cursor.iterator();
-
 		
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next();
@@ -303,25 +216,21 @@ public class MongoDbService implements IMongoDbService {
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
-		data = listOfISqlTableDTO.toArray(data);
-		
-		return data;
+		return listOfISqlTableDTO.toArray(data);
 	}
 
     
     private ISqlTableDTO[] readCountriesCollection(){
-		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
+    	Set<ISqlTableDTO> listOfISqlTableDTO = new HashSet<>();
 		try {
 			this.mongoImportFromCsv(TABLE_COUNTRIES, TABLE_COUNTRIES);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_COUNTRIES);
 		
 		FindIterable<Document> cursor = mongoCollection.find();
 		Iterator<Document> iterator = cursor.iterator();
-		
 		
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next();
@@ -334,89 +243,75 @@ public class MongoDbService implements IMongoDbService {
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
-		data = listOfISqlTableDTO.toArray(data);
-		
-		return data;
+		return listOfISqlTableDTO.toArray(data);
 	}
     
     
     private ISqlTableDTO[] readRegionsCollection(){
-		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
+    	Set<ISqlTableDTO> listOfISqlTableDTO = new HashSet<>();
 		try {
 			this.mongoImportFromCsv(TABLE_REGIONS, TABLE_REGIONS);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_REGIONS);
 		
 		FindIterable<Document> cursor = mongoCollection.find();
 		Iterator<Document> iterator = cursor.iterator();
-		
-		
+
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next();
+			long region_id = Doc.getInteger("region_id", 0);
+			String region_name= Doc.getString("region_name");
 			
-			 long region_id = Doc.getInteger("region_id", 0);
-			 String region_name= Doc.getString("region_name");
-			
-		     listOfISqlTableDTO.add(new RegionsSqlTableDTO(region_id, region_name));
+		    listOfISqlTableDTO.add(new RegionsSqlTableDTO(region_id, region_name));
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
-		data = listOfISqlTableDTO.toArray(data);
-		
-		return data;
+		return listOfISqlTableDTO.toArray(data);
 	}
 	
     private ISqlTableDTO[] readJobHistoryCollection(){
-		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
+    	Set<ISqlTableDTO> listOfISqlTableDTO = new HashSet<>();
 		try {
 			this.mongoImportFromCsv(TABLE_JOB_HISTORY, TABLE_JOB_HISTORY);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_JOB_HISTORY);
 		
 		FindIterable<Document> cursor = mongoCollection.find();
 		Iterator<Document> iterator = cursor.iterator();
-		
-		
+
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next();
 			 
-			 long employee_id = Doc.getInteger("employee_id", 0);
-			 Date start_date =  changeToSqlDate(Doc.getString("start_date"));
-			 Date end_date = changeToSqlDate(Doc.getString("end_date"));	 
-			 int job_id =Doc.getInteger("job_id", 0);
-			 int department_id = Doc.getInteger("department_id", 0);
+			long employee_id = Doc.getInteger("employee_id", 0);
+			Date start_date =  changeToSqlDate(Doc.getString("start_date"));
+			Date end_date = changeToSqlDate(Doc.getString("end_date"));	 
+			int job_id =Doc.getInteger("job_id", 0);
+			int department_id = Doc.getInteger("department_id", 0);
 			
-		     listOfISqlTableDTO.add(new JobHistorySqlTableDTO(employee_id, start_date, end_date, job_id, department_id));
+		    listOfISqlTableDTO.add(new JobHistorySqlTableDTO(employee_id, start_date, end_date, job_id, department_id));
 
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
-		data = listOfISqlTableDTO.toArray(data);
-		
-		return data;
+		return listOfISqlTableDTO.toArray(data);
 	}
     
    
 	private ISqlTableDTO[] readJobsCollection(){
-		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();	
-		MongoDatabase mongoDatabase = mongoClient.getDatabase(mongodbName);
+		Set<ISqlTableDTO> listOfISqlTableDTO = new HashSet<>();
 		try {
 			this.mongoImportFromCsv(TABLE_JOBS, TABLE_JOBS);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_JOBS);
 		
 		FindIterable<Document> cursor = mongoCollection.find();
 		Iterator<Document> iterator = cursor.iterator();
-		
 		
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next(); 
@@ -425,25 +320,20 @@ public class MongoDbService implements IMongoDbService {
 			 String job_title = Doc.getString("job_title");
 			 int min_salary= Doc.getInteger("min_salary", 0);
 			 int max_salary= Doc.getInteger("max_salary", 0);
-			
-			
+
 		     listOfISqlTableDTO.add(new JobsSqlTableDTO(job_id, job_title, min_salary, max_salary));
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
-		data = listOfISqlTableDTO.toArray(data);
-		
-		return data;
+		return listOfISqlTableDTO.toArray(data);
 	}
 	
     
     private ISqlTableDTO[] readDepartmentsCollection(){
-		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
-		MongoDatabase mongoDatabase = mongoClient.getDatabase(mongodbName);
+    	Set<ISqlTableDTO> listOfISqlTableDTO = new HashSet<>();
 		try {
 			this.mongoImportFromCsv(TABLE_DEPARTMENTS, TABLE_DEPARTMENTS);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_DEPARTMENTS);
@@ -464,35 +354,21 @@ public class MongoDbService implements IMongoDbService {
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
-		data = listOfISqlTableDTO.toArray(data);
-		
-		return data;
+		return listOfISqlTableDTO.toArray(data);
 	}
     
     private Date changeToSqlDate(String string) {
-	try {
-    		
-    		if(!"null".equalsIgnoreCase(string)){
-    			
-    	        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-    	        java.util.Date parsed = format.parse(string);
-    	        
-    	        java.sql.Date sql = new java.sql.Date(parsed.getTime());
-
-            return sql;
-    		}
-
-    	}catch (Exception e) {
-    		e.printStackTrace();
-		}
-    	
-    	return null;
-	}
-
-	private Bson eq(String string, String jobTitle) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+	    	if (!"null".equalsIgnoreCase(string)) {
+	    		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	    	    java.util.Date parsed = format.parse(string);    
+	    	    java.sql.Date sql = new java.sql.Date(parsed.getTime());
+	            return sql;
+	    	}
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+		}	
+	    return null;
 	}
 
 }

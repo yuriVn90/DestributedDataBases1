@@ -71,6 +71,38 @@ public class CountriesSqlTableDTO implements ISqlTableDTO {
 		// TODO Auto-generated method stub
 		return country_id + ","+country_name + ","+region_id;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + country_id;
+		result = prime * result + ((country_name == null) ? 0 : country_name.hashCode());
+		result = prime * result + region_id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CountriesSqlTableDTO other = (CountriesSqlTableDTO) obj;
+		if (country_id != other.country_id)
+			return false;
+		if (country_name == null) {
+			if (other.country_name != null)
+				return false;
+		} else if (!country_name.equals(other.country_name))
+			return false;
+		if (region_id != other.region_id)
+			return false;
+		return true;
+	}
+	
 	
 	
 	
