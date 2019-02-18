@@ -253,18 +253,18 @@ public class MongoDbService implements IMongoDbService {
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next();
 			
-			 long employee_id =  Doc.getInteger("employee_id", 0);
+			 int employee_id =  Doc.getInteger("employee_id", 0);
 			 String first_name = Doc.getString("first_name");
 			 String last_name= Doc.getString("last_name"); 
 			 String email = Doc.getString("email"); 
 			 String phone_number = Doc.getInteger("phone_number",0)+"";
 			 Date hire_date = changeToSqlDate(Doc.getString("hire_date"));	 
-			 long job_id  =  Doc.getInteger("job_id", 0);
-//			 int manager_id = Doc.getInteger("manager_id", 0);
+			 int job_id  =  Doc.getInteger("job_id", 0);
+			 int manager_id = Doc.getInteger("manager_id", 0);
 			 int salary  =   Doc.getInteger("salary", 0);
 			 String commission_pct  = Doc.getInteger("commission_pct",0)+""; 
-			 long department_id=  Doc.getInteger("department_id", 0);
-			 listOfISqlTableDTO.add(new EmployeesSqlTableDTO(employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, null, department_id));
+			 int department_id=  Doc.getInteger("department_id", 0);
+			 listOfISqlTableDTO.add(new EmployeesSqlTableDTO(employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id));
 		}
 		
 		ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
@@ -292,12 +292,12 @@ public class MongoDbService implements IMongoDbService {
 		
 		while (iterator.hasNext()) {
 			Document Doc = iterator.next();
-			 long location_id  = Doc.getInteger("location_id", 0);
+			 int location_id  = Doc.getInteger("location_id", 0);
 			 String street_address =  Doc.getString("street_address"); 
 			 int postal_code = Doc.getInteger("postal_code", 0);
 			 String city =  Doc.getString("city"); 
-			 String state_province =  Doc.getInteger("state_province",0)+""; 
-			 long country_id = Doc.getInteger("country_id", 0);
+			 String state_province =  Doc.getString("state_province"); 
+			 int country_id = Doc.getInteger("country_id", 0);
 			
 		     listOfISqlTableDTO.add(new LocationsSqlTableDTO(location_id, street_address, postal_code, city, state_province, country_id));
 		}

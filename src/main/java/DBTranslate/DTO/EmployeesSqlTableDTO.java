@@ -4,25 +4,25 @@ import java.sql.Date;
 
 public class EmployeesSqlTableDTO implements ISqlTableDTO {
 
-	private Long employee_id;
+	private int employee_id;
 	private String first_name;
 	private String last_name;
 	private String email;
 	private String phone_number;
 	private Date hire_date;
-	private Long job_id;
+	private int job_id;
 	private int salary;
 	private String commission_pct;
-	private Long manager_id;
-	private Long department_id;
+	private int manager_id;
+	private int department_id;
 	
 	public EmployeesSqlTableDTO() {
 		
 	}
 
-	public EmployeesSqlTableDTO(Long employee_id, String first_name, String last_name, String email,
-			String phone_number, Date hire_date, Long job_id, int salary, String commission_pct, Long manager_id,
-			Long department_id) {
+	public EmployeesSqlTableDTO(int employee_id, String first_name, String last_name, String email,
+			String phone_number, Date hire_date, int job_id, int salary, String commission_pct, int manager_id,
+			int department_id) {
 		super();
 		this.employee_id = employee_id;
 		this.first_name = first_name;
@@ -41,7 +41,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @return employee_id
 	 */
-	public Long getEmployee_id() {
+	public int getEmployee_id() {
 		return employee_id;
 	}
 
@@ -49,7 +49,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @param employee_id
 	 */
-	public void setEmployee_id(Long employee_id) {
+	public void setEmployee_id(int employee_id) {
 		this.employee_id = employee_id;
 	}
 
@@ -137,7 +137,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @return job_id
 	 */
-	public Long getJob_id() {
+	public int getJob_id() {
 		return job_id;
 	}
 
@@ -145,7 +145,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @param job_id
 	 */
-	public void setJob_id(Long job_id) {
+	public void setJob_id(int job_id) {
 		this.job_id = job_id;
 	}
 
@@ -185,7 +185,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @return manager_id
 	 */
-	public Long getManager_id() {
+	public int getManager_id() {
 		return manager_id;
 	}
 
@@ -193,7 +193,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @param manager_id
 	 */
-	public void setManager_id(Long manager_id) {
+	public void setManager_id(int manager_id) {
 		this.manager_id = manager_id;
 	}
 
@@ -201,7 +201,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @return department_id
 	 */
-	public Long getDepartment_id() {
+	public int getDepartment_id() {
 		return department_id;
 	}
 
@@ -209,7 +209,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @param department_id
 	 */
-	public void setDepartment_id(Long department_id) {
+	public void setDepartment_id(int department_id) {
 		this.department_id = department_id;
 	}
 

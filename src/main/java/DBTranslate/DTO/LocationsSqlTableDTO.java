@@ -2,12 +2,12 @@ package DBTranslate.DTO;
 
 public class LocationsSqlTableDTO implements ISqlTableDTO {
 	
-	private Long location_id;
+	private int location_id;
 	private String street_address;
 	private int  postal_code;
 	private String city; 
 	private String state_province;
-	private Long  country_id;
+	private int  country_id;
 	
 	
 	public LocationsSqlTableDTO() {
@@ -15,8 +15,8 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 	}
 
 
-	public LocationsSqlTableDTO(Long location_id, String street_address, int postal_code, String city,
-			String state_province, Long country_id) {
+	public LocationsSqlTableDTO(int location_id, String street_address, int postal_code, String city,
+			String state_province, int country_id) {
 		super();
 		this.location_id = location_id;
 		this.street_address = street_address;
@@ -30,7 +30,7 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @return location_id
 	 */
-	public Long getLocation_id() {
+	public int getLocation_id() {
 		return location_id;
 	}
 
@@ -38,7 +38,7 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @param location_id
 	 */
-	public void setLocation_id(Long location_id) {
+	public void setLocation_id(int location_id) {
 		this.location_id = location_id;
 	}
 
@@ -110,7 +110,7 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @return	country_id
 	 */
-	public Long getCountry_id() {
+	public int getCountry_id() {
 		return country_id;
 	}
 
@@ -118,7 +118,7 @@ public class LocationsSqlTableDTO implements ISqlTableDTO {
 	 * 
 	 * @param country_id
 	 */
-	public void setCountry_id(Long country_id) {
+	public void setCountry_id(int country_id) {
 		this.country_id = country_id;
 	}
 
