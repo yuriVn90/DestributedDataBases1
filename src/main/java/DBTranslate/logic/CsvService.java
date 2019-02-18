@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 
-import DBTranslate.DTO.ISqlTableDTO;
 
 @Service
 public class CsvService implements ICsvService {
@@ -112,9 +111,5 @@ public class CsvService implements ICsvService {
 		}
 	}
 
-	@Override
-	public void export(String tableName, String fileName, ISqlTableDTO[] tableData) throws Exception {
-		this.export(tableName, fileName);
-	}
 
 }

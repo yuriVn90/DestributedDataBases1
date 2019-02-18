@@ -1,6 +1,5 @@
 package DBTranslate.logic;
 
-import DBTranslate.DTO.ISqlTableDTO;
 
 public interface ICsvService {
 	
@@ -11,8 +10,6 @@ public interface ICsvService {
 	 * @param tableData
 	 * @throws Exception
 	 */
-	public void export(String tableName, String fileName, ISqlTableDTO[] tableData) throws Exception;
-	
 	public void export(String tableName, String fileName) throws Exception;
 	
 	/**
