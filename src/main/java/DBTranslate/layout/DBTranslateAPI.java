@@ -28,7 +28,7 @@ public class DBTranslateAPI {
 			method=RequestMethod.GET,
 			path="/getSQLTable/{tableName}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:64756")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public ISqlTableDTO[] getMySqlTable (@PathVariable("tableName") String tableName) {
 		return this.mySql.getMySqlTable(tableName);
 	}
@@ -37,7 +37,7 @@ public class DBTranslateAPI {
 			method=RequestMethod.GET,
 			path="/getMongoCollection/{collectionName}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:61477")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public ISqlTableDTO[] getMongoDbCollection (@PathVariable("collectionName") String collectionName) {
 		return this.mongo.getMongoDbCollection(collectionName);
 	}
@@ -46,7 +46,7 @@ public class DBTranslateAPI {
 			method=RequestMethod.GET,
 			path="/getSumSalaries",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:61477")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public int getSumOfSalaries () {
 		return this.mongo.getSumOfSalaries();
 	}

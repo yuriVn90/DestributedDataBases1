@@ -20,11 +20,11 @@ public class CsvService implements ICsvService {
 	public static final String URL_CONNECTION = "jdbc:mysql://localhost:3306/hr?useSSL=true";
 	public static final String USER = "root";
 	public static final String PASSWORD = "root";
+	public static final String MONGO_DB_NAME = "mongo_hr";
 	
     private String user;
     private String password;
     private String mongoName;
-    private Connection connection;
     
     public CsvService() {
     	
@@ -34,21 +34,17 @@ public class CsvService implements ICsvService {
     public void init() {
     	this.user = USER;
     	this.password = PASSWORD;
-    	this.mongoName = "mongo_hr";
-    	try {
-			this.connection = DriverManager.getConnection(URL_CONNECTION, user, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    	this.mongoName = MONGO_DB_NAME;
     }
     
 	@Override
 	public void export(String tableName, String fileName) throws Exception {
+		Connection connection = DriverManager.getConnection(URL_CONNECTION, this.user, this.password);
 		try {
 	        Statement stmt = connection.createStatement();
 	        String sql = "Select * from "+tableName;
 	        ResultSet res = stmt.executeQuery(sql);
-	        PrintWriter pw = new PrintWriter(new File(fileName));
+	        PrintWriter pw = new PrintWriter(new File(fileName + ".csv"));
 	        writeColumnsToCsv(pw, res);        
 	        writeDataToCsv(pw, res);
 	        
@@ -105,13 +101,12 @@ public class CsvService implements ICsvService {
 	@Override
 	public void importFromCsv(String tableName, String fileName) {
 		try {
-			//TODO install mongoDB and change the path
-			ProcessBuilder processBuilder = new ProcessBuilder("/Users/data/db/","-d",this.mongoName
-					,"-c",tableName,"--type","csv","--file","/Users/yuriv/Developer/Yuri/dataBase/DistrebutedDataBases1/"+fileName, "--headerline");
-			Process process = processBuilder.start();
-			System.out.println("Reading the csv to  mongoDB");
+			ProcessBuilder pb2 = new ProcessBuilder("/usr/local/bin/mongoimport","-d",this.mongoName
+					,"-c",tableName,"--type","csv","--file","/Users/yuriv/Developer/Yuri/DataBase/DistributedDataBases1/" +fileName+".csv", "--headerline");
+			Process process = pb2.start();
+			System.out.println("Reading csv file");
 			process.waitFor();
-			System.out.println("end \n");
+			System.out.println("ended succesfuly \n");
 		} catch (Exception e) {
 			System.out.println("Error executing " + e.toString());
 		}
