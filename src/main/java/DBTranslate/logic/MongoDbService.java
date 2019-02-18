@@ -113,22 +113,40 @@ public class MongoDbService implements IMongoDbService {
 		MongoCollection<Document> mongoCollectionSecond = mongoDatabase.getCollection(TABLE_LOCATIONS);
 		MongoCollection<Document> mongoCollectionThird = mongoDatabase.getCollection(TABLE_DEPARTMENTS);
 		MongoCollection<Document> mongoCollectionFourth = mongoDatabase.getCollection(TABLE_EMPLOYEES);
-		FindIterable<Document> doc = mongoCollectionFirst.find(new BasicDBObject("country_name", "israel"));
-		int countryId = doc.first().getInteger("country_id");
+		FindIterable<Document> doc = mongoCollectionFirst.find(new BasicDBObject("country_name", countryName));
+		int countryId = -1;
+		if (doc.first() != null) {
+			countryId = doc.first().getInteger("country_id");
+		} else {
+			return 0;
+		}
+
 		AggregateIterable<Document> locations = mongoCollectionSecond.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("country_id", countryId)), Aggregates.group("$location_id")));
 		
 		AggregateIterable<Document> departments = null;
 		AggregateIterable<Document> employees = null;
 		List<Document> employeesIds = new ArrayList<>();
 		
-		for (Document d : locations) {
-			departments = mongoCollectionThird.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("location_id", d.getInteger("_id"))), Aggregates.group("$department_id")));
-			for(Document l : departments) {
-				employees = mongoCollectionFourth.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("department_id", l.getInteger("_id"))), Aggregates.group("$employee_id")));
-				for(Document e : employees) {
-					employeesIds.add(e);
+		if (locations != null) {
+			for (Document d : locations) {
+				departments = mongoCollectionThird.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("location_id", d.getInteger("_id"))), Aggregates.group("$department_id")));
+				if (departments != null) {
+					for(Document l : departments) {
+						employees = mongoCollectionFourth.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("department_id", l.getInteger("_id"))), Aggregates.group("$employee_id")));
+						if (employees != null) {
+							for(Document e : employees) {
+								employeesIds.add(e);
+							}
+						} else {
+							return 0;
+						}
+					}
+				} else {
+					return 0;
 				}
 			}
+		} else {
+			return 0;
 		}
 	    return employeesIds.size();
 	}

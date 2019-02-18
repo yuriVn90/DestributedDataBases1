@@ -20,7 +20,7 @@ public interface IMongoDbService {
 	
 	/**
 	 * 
-	 * @return sum of all employees' salaries
+	 * @return max salary
 	 */
 	public int getMaxSalary();
 	

@@ -96,7 +96,7 @@ public class JobHistorySqlTableDTO implements ISqlTableDTO {
 	}
 
 	@Override
-	public String getStringToCSV() {
+	public String toString() {
 		// TODO Auto-generated method stub
 		return employee_id +","+start_date +","+end_date +","+job_id +","+department_id;
 	}

@@ -214,7 +214,7 @@ public class EmployeesSqlTableDTO implements ISqlTableDTO {
 	}
 
 	@Override
-	public String getStringToCSV() {
+	public String toString() {
 		// TODO Auto-generated method stub
 		return employee_id + ","+first_name + ","+last_name + ","+email + ","+phone_number + ","+hire_date + ","+job_id + "," +salary + ","+commission_pct + ","+manager_id + ","+department_id;
 	}

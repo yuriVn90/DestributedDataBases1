@@ -44,7 +44,7 @@ public class RegionsSqlTableDTO implements ISqlTableDTO {
 	}
 
 	@Override
-	public String getStringToCSV() {
+	public String toString() {
 		// TODO Auto-generated method stub
 		return region_id+","+region_name;
 	}

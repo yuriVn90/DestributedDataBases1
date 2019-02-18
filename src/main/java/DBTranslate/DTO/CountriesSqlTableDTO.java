@@ -67,8 +67,7 @@ public class CountriesSqlTableDTO implements ISqlTableDTO {
 	}
 
 	@Override
-	public String getStringToCSV() {
-		// TODO Auto-generated method stub
+	public String toString() {
 		return country_id + ","+country_name + ","+region_id;
 	}
 

@@ -83,7 +83,7 @@ public class DepartmentsSqlTableDTO implements ISqlTableDTO {
 	}
 
 	@Override
-	public String getStringToCSV() {
+	public String toString() {
 		// TODO Auto-generated method stub
 		return department_id+","+department_name+","+manager_id+","+location_id;
 	}
