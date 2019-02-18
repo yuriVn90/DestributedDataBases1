@@ -125,7 +125,7 @@ INSERT INTO LOCATIONS(location_id, street_address, postal_code, city, state_prov
 (13, 'hytdfs 15', '1313', 'fffffff', 'dsjakn', 6);
 
 INSERT INTO EMPLOYEES(employee_id, first_name, last_name, email, phone_number, hire_date, salary, commission_pct, manager_id, department_id, job_id) VALUES
-(1,'gal', 'zaidman', 'gal@gmail.com', '0509980092', '2018-01-01', 290000, 25, null, 1, 3),
+(1,'gal', 'zaidman', 'gal@gmail.com', '0509980092', '2018-01-01', 290000, 25, 1, 1, 3),
 (2,'dudu', 'kirlich', 'dudu@gmail.com', '0539980092', '2018-01-01', 190000, 25, 1, 1, 5),
 (3,'a', 'aa', 'a@gmail.com', '0509980091', '2018-01-01', 50000, 20, 1, 2, 1),
 (4,'b', 'ss', 'b@gmail.com', '0509980093', '2018-01-01', 50001, 20, 3, 2, 1),

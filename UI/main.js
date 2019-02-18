@@ -24,10 +24,10 @@ function getMongoDbCollection() {
     });
 }
 
-function getSumOfSalaries() {
-  var resultElement = document.getElementById('salariesSum');
+function getMaxSalary() {
+  var resultElement = document.getElementById('maxSalary');
   resultElement.innerHTML = '';
-  axios.get('http://localhost:8080/getSumSalaries')
+  axios.get('http://localhost:8080/getMaxSalary')
     .then(function (response) {
       resultElement.innerHTML = generateSuccessHTMLOutput(response);
     })

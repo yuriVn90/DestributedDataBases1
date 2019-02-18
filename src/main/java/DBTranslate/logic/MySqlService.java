@@ -39,7 +39,6 @@ public class MySqlService implements IMySqlService {
 
     private String user;
     private String password;
-    private Connection connection;
     private ICsvService csv;
 	
 	public MySqlService() {
@@ -49,12 +48,7 @@ public class MySqlService implements IMySqlService {
 	@PostConstruct
 	public void init() {
 		this.user = USER;
-	     this.password = PASSWORD;
-		try {
-			this.connection = DriverManager.getConnection(URL_CONNECTION, user, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	    this.password = PASSWORD;
 	}
 	
 	@Autowired
@@ -64,32 +58,38 @@ public class MySqlService implements IMySqlService {
 
 	@Override
 	public ISqlTableDTO[] getMySqlTable(String tableName) {
-		switch (tableName.toUpperCase()) {
-			case TABLE_COUNTRIES: 	return this.readCountriesTable();
-			case TABLE_DEPARTMENTS: return this.readDepartmentsTable();
-			case TABLE_EMPLOYEES:	return this.readEmployeesTable();
-			case TABLE_JOB_HISTORY:	return this.readJobHistoryTable();
-			case TABLE_JOBS:		return this.readJobsTable();
-			case TABLE_LOCATIONS:	return this.readLocationsTable();
-			case TABLE_REGIONS:		return this.readRegionsTable();
-			default:
+		try {
+			switch (tableName.toUpperCase()) {
+				case TABLE_COUNTRIES: 	return this.readCountriesTable();
+				case TABLE_DEPARTMENTS: return this.readDepartmentsTable();
+				case TABLE_EMPLOYEES:	return this.readEmployeesTable();
+				case TABLE_JOB_HISTORY:	return this.readJobHistoryTable();
+				case TABLE_JOBS:		return this.readJobsTable();
+				case TABLE_LOCATIONS:	return this.readLocationsTable();
+				case TABLE_REGIONS:		return this.readRegionsTable();
+				default:
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public ISqlTableDTO[] readLocationsTable(){
+	public ISqlTableDTO[] readLocationsTable() {
 		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
+		Connection connection;
 	    try {
+	    	connection = DriverManager.getConnection(URL_CONNECTION, user, password);
 	        Statement statment = connection.createStatement();
 	        String sql = "Select * from LOCATIONS";
 	        ResultSet resultSet = statment.executeQuery(sql);
 			while(resultSet.next()){
-				 long location_id  = resultSet.getLong(resultSet.getMetaData().getColumnName(1));
+				 int location_id  = resultSet.getInt(resultSet.getMetaData().getColumnName(1));
 				 String street_address = resultSet.getString(resultSet.getMetaData().getColumnName(2));
 				 int  postal_code = resultSet.getInt(resultSet.getMetaData().getColumnName(3));
 				 String city = resultSet.getString(resultSet.getMetaData().getColumnName(4)); 
 				 String state_province = resultSet.getString(resultSet.getMetaData().getColumnName(5));
-				 long  country_id = resultSet.getLong(resultSet.getMetaData().getColumnName(6));
+				 int  country_id = resultSet.getInt(resultSet.getMetaData().getColumnName(6));
 			     listOfISqlTableDTO.add(new LocationsSqlTableDTO(location_id, street_address, postal_code, city, state_province, country_id));
 			}
 			ISqlTableDTO[] allData = new ISqlTableDTO[listOfISqlTableDTO.size()];
@@ -104,10 +104,12 @@ public class MySqlService implements IMySqlService {
 	/**
 	 * 
 	 * @return Countries table from mySQL
+	 * @throws SQLException 
 	 */
-	private ISqlTableDTO[] readCountriesTable() {
+	private ISqlTableDTO[] readCountriesTable() throws SQLException {
 		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
 	    try {
+	    	Connection connection = DriverManager.getConnection(URL_CONNECTION, user, password);
 	        Statement statment = connection.createStatement();
 	        String sql = "Select * from COUNTRIES";
 	        ResultSet resultSet = statment.executeQuery(sql);
@@ -129,10 +131,12 @@ public class MySqlService implements IMySqlService {
 	/**
 	 * 
 	 * @return Regions table from mySQL
+	 * @throws SQLException 
 	 */
-	private ISqlTableDTO[] readRegionsTable() {
+	private ISqlTableDTO[] readRegionsTable() throws SQLException {
 		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
 	    try {
+	    	Connection connection = DriverManager.getConnection(URL_CONNECTION, user, password);
 	        Statement statement = connection.createStatement();
 	        String sql = "Select * from REGIONS";
 	        ResultSet resultSet = statement.executeQuery(sql);
@@ -154,10 +158,12 @@ public class MySqlService implements IMySqlService {
 	/**
 	 * 
 	 * @return Job_history table from mySQL
+	 * @throws SQLException 
 	 */
-	private ISqlTableDTO[] readJobHistoryTable(){
+	private ISqlTableDTO[] readJobHistoryTable() throws SQLException {
 		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
 	    try {
+	    	Connection connection = DriverManager.getConnection(URL_CONNECTION, user, password);
 	        Statement stmt = connection.createStatement();
 	        String sql = "Select * from JOB_HISTORY";
 	        ResultSet resultSet = stmt.executeQuery(sql);
@@ -181,10 +187,12 @@ public class MySqlService implements IMySqlService {
 	/**
 	 * 
 	 * @return Jobs table from mySQL
+	 * @throws SQLException 
 	 */
-	private ISqlTableDTO[] readJobsTable() {
+	private ISqlTableDTO[] readJobsTable() throws SQLException {
 		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
 	    try {
+	    	Connection connection = DriverManager.getConnection(URL_CONNECTION, user, password);
 	        Statement stmt = connection.createStatement();
 	        String sql = "Select * from JOBS";
 	        ResultSet res = stmt.executeQuery(sql);
@@ -207,25 +215,27 @@ public class MySqlService implements IMySqlService {
 	/**
 	 * 
 	 * @return Employees table from mySQL
+	 * @throws SQLException 
 	 */
-	private ISqlTableDTO[] readEmployeesTable() {
+	private ISqlTableDTO[] readEmployeesTable() throws SQLException {
 		ArrayList<ISqlTableDTO>listOfISqlTableDTO = new ArrayList<>();
 	    try {
+	    	Connection connection = DriverManager.getConnection(URL_CONNECTION, user, password);
 	        Statement stmt = connection.createStatement();
 	        String sql = "Select * from EMPLOYEES";
 	        ResultSet res = stmt.executeQuery(sql);
 			while(res.next()) {
-				 long employee_id =  res.getLong(res.getMetaData().getColumnName(1));
+				 int employee_id =  res.getInt(res.getMetaData().getColumnName(1));
 				 String first_name = res.getString(res.getMetaData().getColumnName(2));
 				 String last_name= res.getString(res.getMetaData().getColumnName(3));
 				 String email = res.getString(res.getMetaData().getColumnName(4));
 				 String phone_number = res.getString(res.getMetaData().getColumnName(5));
 				 Date hire_date  = res.getDate(res.getMetaData().getColumnName(6));
-				 long job_id  =  res.getLong(res.getMetaData().getColumnName(7));
+				 int job_id  =  res.getInt(res.getMetaData().getColumnName(7));
 				 int salary  =  res.getInt(res.getMetaData().getColumnName(8));
 				 String commission_pct  = res.getString(res.getMetaData().getColumnName(9));
-				 long manager_id =  res.getLong(res.getMetaData().getColumnName(10));
-				 long department_id=  res.getLong(res.getMetaData().getColumnName(11));
+				 int manager_id =  res.getInt(res.getMetaData().getColumnName(10));
+				 int department_id=  res.getInt(res.getMetaData().getColumnName(11));
 				 listOfISqlTableDTO.add(new EmployeesSqlTableDTO(employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id));
 			}
 			ISqlTableDTO[] data = new ISqlTableDTO[listOfISqlTableDTO.size()];
@@ -241,10 +251,12 @@ public class MySqlService implements IMySqlService {
 	/**
 	 * 
 	 * @return Departments table from mySQL
+	 * @throws SQLException 
 	 */
-	private ISqlTableDTO[] readDepartmentsTable() {
+	private ISqlTableDTO[] readDepartmentsTable() throws SQLException {
 		ArrayList<ISqlTableDTO> listOfISqlTableDTO = new ArrayList<>();
 	    try {
+	    	Connection connection = DriverManager.getConnection(URL_CONNECTION, user, password);
 	        Statement stmt = connection.createStatement();
 	        String SQL = "Select * from DEPARTMENTS";
 	        ResultSet res = stmt.executeQuery(SQL);
@@ -262,16 +274,6 @@ public class MySqlService implements IMySqlService {
 	    	e.printStackTrace();
 	    }
 		return null;
-	}
-
-	@Override
-	public void exportTableToCSV(String tableName, String fileName, ISqlTableDTO[] tableData) {
-		try {
-			this.csv.export(tableName, fileName, tableData);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 	@Override

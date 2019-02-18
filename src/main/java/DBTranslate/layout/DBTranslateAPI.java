@@ -28,7 +28,7 @@ public class DBTranslateAPI {
 			method=RequestMethod.GET,
 			path="/getSQLTable/{tableName}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:64756")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public ISqlTableDTO[] getMySqlTable (@PathVariable("tableName") String tableName) {
 		return this.mySql.getMySqlTable(tableName);
 	}
@@ -37,25 +37,25 @@ public class DBTranslateAPI {
 			method=RequestMethod.GET,
 			path="/getMongoCollection/{collectionName}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:61477")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public ISqlTableDTO[] getMongoDbCollection (@PathVariable("collectionName") String collectionName) {
 		return this.mongo.getMongoDbCollection(collectionName);
 	}
 	
 	@RequestMapping(
 			method=RequestMethod.GET,
-			path="/getSumSalaries",
+			path="/getMaxSalary",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:61477")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public int getSumOfSalaries () {
-		return this.mongo.getSumOfSalaries();
+		return this.mongo.getMaxSalary();
 	}
 	
 	@RequestMapping(
 			method=RequestMethod.GET,
 			path="/getNumberOfEmployeesFromCountry/{countryName}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:61477")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public int getNumbersOfEmployeesFromCountry (@PathVariable("countryName") String countryName) {
 		return this.mongo.getNumbersOfEmployeesFromCountry(countryName);
 	}
@@ -64,7 +64,7 @@ public class DBTranslateAPI {
 			method=RequestMethod.GET,
 			path="/getEmailsOfJobTitle/{jobTitle}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "http://127.0.0.1:61477")
+	@CrossOrigin(origins = "http://127.0.0.1:54925")
 	public String[] getEmailsOfJobTitle (@PathVariable("jobTitle") String jobTitle) {
 		return this.mongo.getEmailsOfJobTitle(jobTitle);
 	}

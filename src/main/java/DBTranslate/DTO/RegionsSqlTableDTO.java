@@ -44,9 +44,42 @@ public class RegionsSqlTableDTO implements ISqlTableDTO {
 	}
 
 	@Override
-	public String getStringToCSV() {
+	public String toString() {
 		// TODO Auto-generated method stub
 		return region_id+","+region_name;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((region_id == null) ? 0 : region_id.hashCode());
+		result = prime * result + ((region_name == null) ? 0 : region_name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RegionsSqlTableDTO other = (RegionsSqlTableDTO) obj;
+		if (region_id == null) {
+			if (other.region_id != null)
+				return false;
+		} else if (!region_id.equals(other.region_id))
+			return false;
+		if (region_name == null) {
+			if (other.region_name != null)
+				return false;
+		} else if (!region_name.equals(other.region_name))
+			return false;
+		return true;
+	}
+	
+	
 
 }
