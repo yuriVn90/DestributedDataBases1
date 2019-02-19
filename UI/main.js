@@ -62,27 +62,6 @@ function getEmailsWithJobTitle() {
     });
 }
 
-// document.getElementById('todoInputForm').addEventListener('submit', performPostRequest);
-// function performPostRequest(e) {
-//   var resultElement = document.getElementById('postResult');
-//   var todoTitle = document.getElementById('todoTitle').value;
-//   resultElement.innerHTML = '';
-//
-//   //add URL and params
-//   axios.post('', {
-//
-//     completed: false
-//   })
-//   .then(function (response) {
-//     resultElement.innerHTML = generateSuccessHTMLOutput(response);
-//   })
-//   .catch(function (error) {
-//     resultElement.innerHTML = generateErrorHTMLOutput(error);
-//   });
-//
-//   e.preventDefault();
-// }
-
 function generateSuccessHTMLOutput(response) {
   return  '<h4>Result</h4>' +
           '<h5>Data:</h5>' +

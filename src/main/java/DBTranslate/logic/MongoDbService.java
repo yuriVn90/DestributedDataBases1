@@ -90,8 +90,8 @@ public class MongoDbService implements IMongoDbService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(TABLE_EMPLOYEES);
-		AggregateIterable<Document> ag = mongoCollection.aggregate(Arrays.asList(Aggregates.group(null, Accumulators.max("totalSum", "$salary"))));	
+		MongoCollection<Document> employeesCollection = mongoDatabase.getCollection(TABLE_EMPLOYEES);
+		AggregateIterable<Document> ag = employeesCollection.aggregate(Arrays.asList(Aggregates.group(null, Accumulators.max("totalSum", "$salary"))));	
 		Document first = ag.first();
 		if (first != null) {
 			return (int)first.get("totalSum");
@@ -109,11 +109,11 @@ public class MongoDbService implements IMongoDbService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		MongoCollection<Document> mongoCollectionFirst = mongoDatabase.getCollection(TABLE_COUNTRIES);
-		MongoCollection<Document> mongoCollectionSecond = mongoDatabase.getCollection(TABLE_LOCATIONS);
-		MongoCollection<Document> mongoCollectionThird = mongoDatabase.getCollection(TABLE_DEPARTMENTS);
-		MongoCollection<Document> mongoCollectionFourth = mongoDatabase.getCollection(TABLE_EMPLOYEES);
-		FindIterable<Document> doc = mongoCollectionFirst.find(new BasicDBObject("country_name", countryName));
+		MongoCollection<Document> countriesCollection = mongoDatabase.getCollection(TABLE_COUNTRIES);
+		MongoCollection<Document> locationsCollection = mongoDatabase.getCollection(TABLE_LOCATIONS);
+		MongoCollection<Document> departmentsCollection = mongoDatabase.getCollection(TABLE_DEPARTMENTS);
+		MongoCollection<Document> employeesCollection = mongoDatabase.getCollection(TABLE_EMPLOYEES);
+		FindIterable<Document> doc = countriesCollection.find(new BasicDBObject("country_name", countryName));
 		int countryId = -1;
 		if (doc.first() != null) {
 			countryId = doc.first().getInteger("country_id");
@@ -121,7 +121,7 @@ public class MongoDbService implements IMongoDbService {
 			return 0;
 		}
 
-		AggregateIterable<Document> locations = mongoCollectionSecond.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("country_id", countryId)), Aggregates.group("$location_id")));
+		AggregateIterable<Document> locations = locationsCollection.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("country_id", countryId)), Aggregates.group("$location_id")));
 		
 		AggregateIterable<Document> departments = null;
 		AggregateIterable<Document> employees = null;
@@ -129,10 +129,10 @@ public class MongoDbService implements IMongoDbService {
 		
 		if (locations != null) {
 			for (Document d : locations) {
-				departments = mongoCollectionThird.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("location_id", d.getInteger("_id"))), Aggregates.group("$department_id")));
+				departments = departmentsCollection.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("location_id", d.getInteger("_id"))), Aggregates.group("$department_id")));
 				if (departments != null) {
 					for(Document l : departments) {
-						employees = mongoCollectionFourth.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("department_id", l.getInteger("_id"))), Aggregates.group("$employee_id")));
+						employees = employeesCollection.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("department_id", l.getInteger("_id"))), Aggregates.group("$employee_id")));
 						if (employees != null) {
 							for(Document e : employees) {
 								employeesIds.add(e);
@@ -159,13 +159,13 @@ public class MongoDbService implements IMongoDbService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		MongoCollection<Document> mongoCollectionFirst = mongoDatabase.getCollection(TABLE_JOBS);
-		MongoCollection<Document> mongoCollectionSecond = mongoDatabase.getCollection(TABLE_EMPLOYEES);
+		MongoCollection<Document> jobsCollection = mongoDatabase.getCollection(TABLE_JOBS);
+		MongoCollection<Document> employeesCollection = mongoDatabase.getCollection(TABLE_EMPLOYEES);
 		
-		AggregateIterable<Document> jobs = mongoCollectionFirst.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("job_title", jobTitle)), Aggregates.group("$job_id")));
+		AggregateIterable<Document> jobs = jobsCollection.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("job_title", jobTitle)), Aggregates.group("$job_id")));
 		List<String> employeeEmails = new ArrayList<>();
 		for (Document j : jobs) {
-			AggregateIterable<Document> employees = mongoCollectionSecond.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("job_id", j.getInteger("_id"))), Aggregates.group("$email")));
+			AggregateIterable<Document> employees = employeesCollection.aggregate(Arrays.asList(Aggregates.match(new BasicDBObject("job_id", j.getInteger("_id"))), Aggregates.group("$email")));
 			for (Document e : employees) {
 				employeeEmails.add(e.getString("_id"));
 			}
